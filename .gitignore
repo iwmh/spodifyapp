@@ -13,3 +13,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# newly added after the first commit
+/.idea/vcs.xml
