@@ -1,4 +1,4 @@
-package com.iwmh.spodifyapp
+package com.iwmh.spodifyapp.view
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
