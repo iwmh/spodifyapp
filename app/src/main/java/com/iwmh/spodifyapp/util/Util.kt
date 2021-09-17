@@ -2,6 +2,7 @@ package com.iwmh.spodifyapp.util
 
 import android.content.Context
 import java.io.IOException
+import java.lang.Exception
 
 class Util {
     companion object {
@@ -14,8 +15,9 @@ class Util {
                 inputStream.close()
                 String(buffer, Charsets.UTF_8)
             } catch (ex: IOException) {
-                ex.printStackTrace()
-                return null
+                throw ex
+            } catch (ex: Exception) {
+                throw ex
             }
             return json
         }

@@ -12,6 +12,7 @@ import kotlinx.serialization.json.Json
 
 import org.junit.Assert.*
 import org.junit.runner.RunWith
+import java.io.IOException
 
 @RunWith(AndroidJUnit4::class)
 @SmallTest
@@ -36,13 +37,15 @@ class UtilUnitTestWithContext {
     @Test
     fun loadJsonFromAsset_test_no_file_found(){
 
-        // Context of the app under test.
-        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        assertThrows(IOException::class.java) {
 
-        // get secret_test.json file from "assets" folder
-        val secretString = Util.loadJSONFromAsset(context, "secret_test_.json")
+            // Context of the app under test.
+            val context = InstrumentationRegistry.getInstrumentation().targetContext
 
-        assertEquals( null, secretString)
+            // get secret_test.json file from "assets" folder
+            val secretString = Util.loadJSONFromAsset(context, "secret_test_.json")
+
+        }
     }
 
 }
