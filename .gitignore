@@ -16,3 +16,4 @@ local.properties
 
 # newly added after the first commit
 /.idea/vcs.xml
+/app/src/main/assets/secret.json
