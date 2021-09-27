@@ -56,7 +56,7 @@ class AuthorizationActivity : ComponentActivity(){
 
                 // Check if the "state" matches precalculated state value.
                 if(resp.state != this.stateValue){
-                    throw  Exception("Detected mismatch with state value you calculated.")
+                    throw  Exception("Detected mismatch with state value you calculated. " + ex.toString())
                 }
 
                 // Exchange the authorization code
@@ -65,11 +65,13 @@ class AuthorizationActivity : ComponentActivity(){
                 ) { tokenResp, tokenEx ->
                     // update the AuthState
                     authState.update(tokenResp, tokenEx)
-                    //
+
                     if (tokenResp != null){
+                        // Token exchange succeeded.
 
                     } else {
-
+                        // Token exchange failed, check ex for detail.
+                        throw  Exception("Token exchange failed. " + tokenEx.toString())
                     }
                 }
 
