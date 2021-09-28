@@ -32,9 +32,8 @@ class MainActivity : ComponentActivity() {
     // Viewmodel for this activity.
     private val mainViewModel: MainViewModel by viewModels()
 
-    // AuthorizationService and AuthorizationRequest for AppAuth
+    // AuthorizationService for AppAuth
     private lateinit var authService: AuthorizationService
-    private lateinit var authRequest: AuthorizationRequest
 
     // launcher to launch the activity for login screen.
     private val launcher: ActivityResultLauncher<Intent> =
@@ -128,7 +127,7 @@ class MainActivity : ComponentActivity() {
             // deserialize the json string to Secret data class
             val secretData = Json.decodeFromString<Secret>(secretString ?: "")
 
-            authRequest = AuthorizationRequest.Builder(
+            val authRequest = AuthorizationRequest.Builder(
                 serviceConfig,                      // the authorization service configuration
                 secretData.client_id,               // the client ID, typically pre-registered and static
                 ResponseTypeValues.CODE,            // the response_type value: we want a code
