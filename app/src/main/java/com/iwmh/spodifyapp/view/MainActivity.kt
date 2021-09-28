@@ -36,9 +36,6 @@ class MainActivity : ComponentActivity() {
     private lateinit var authService: AuthorizationService
     private lateinit var authRequest: AuthorizationRequest
 
-    // AuthState
-    private lateinit var authState: AuthState
-
     // State for AppAuth
     private var stateValue = ""
 
@@ -62,7 +59,7 @@ class MainActivity : ComponentActivity() {
             }
 
             // update the AuthState
-            authState.update(resp, ex)
+            mainViewModel.updateAuthState(resp, ex)
 
             // Check if the "state" matches precalculated state value.
             if(resp.state != this.stateValue){
@@ -74,7 +71,7 @@ class MainActivity : ComponentActivity() {
                 resp.createTokenExchangeRequest()
             ) { tokenResp, tokenEx ->
                 // update the AuthState
-                authState.update(tokenResp, tokenEx)
+                mainViewModel.updateAuthState(tokenResp, tokenEx)
 
                 if (tokenResp != null){
                     // Token exchange succeeded.
@@ -89,22 +86,27 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // read SharedPreferences and get AuthState
-//        var authState = AuthState()
+        // Read AuthState from SharedPreferences.
+        val authPrefs = getSharedPreferences("auth", MODE_PRIVATE)
+        val stateJson = authPrefs.getString("stateJson", null)
+
         val serviceConfig = AuthorizationServiceConfiguration(
             Uri.parse("https://accounts.spotify.com/authorize"),  // authorization endpoint
             Uri.parse("https://accounts.spotify.com/api/token"),  // token endpoint
         )
-            authState = AuthState(serviceConfig)
 
-        val authPrefs = getSharedPreferences("auth", MODE_PRIVATE)
-        val stateJson = authPrefs.getString("stateJson", null)
         if (stateJson != null){
-            authState = AuthState.jsonDeserialize(stateJson)
+            // AuthState successfully read from SharedPreferences.
+            // Set it in the viewmodel.
+            mainViewModel.setNewAuthState(AuthState.jsonDeserialize(stateJson))
+        } else {
+            // AuthState isn't stored in SharedPreferences, so the user hasn't been logged in.
+            // Set the initial AuthState in the viewmodel.
+            mainViewModel.setNewAuthState(AuthState(serviceConfig))
         }
 
-        // Check if the authstate is valid
-        if(authState.isAuthorized){
+        // Check if the AuthState is valid
+        if(mainViewModel.isAuthorized()){
             // If the user's already logged in, show the home page.
             setContent {
                 SpodifyApp(name = "Hiroshi", viewModel = mainViewModel)
@@ -113,14 +115,6 @@ class MainActivity : ComponentActivity() {
             // Otherwise, show the login page.
 
             // ---------- ↓ AppAuth Preparation ↓ ----------
-//            val serviceConfig = AuthorizationServiceConfiguration(
-//                Uri.parse("https://accounts.spotify.com/authorize"),  // authorization endpoint
-//                Uri.parse("https://accounts.spotify.com/api/token"),  // token endpoint
-//            )
-
-            // seed an AuthState instance.
-//            authState = AuthState(serviceConfig)
-
             // prepare for PKCE info
             val codeVerifier = CodeVerifierUtil.generateRandomCodeVerifier()
             val codeChallenge = CodeVerifierUtil.deriveCodeVerifierChallenge(codeVerifier)
@@ -146,7 +140,7 @@ class MainActivity : ComponentActivity() {
                         "playlist-modify-private " +
                         "user-read-playback-state " +
                         "user-read-currently-playing"
-            ).setCodeVerifier(                      //
+            ).setCodeVerifier(
                 codeVerifier,
                 codeChallenge,
                 CodeVerifierUtil.getCodeVerifierChallengeMethod()
