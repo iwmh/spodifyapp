@@ -5,9 +5,9 @@ import net.openid.appauth.AuthorizationResponse
 import net.openid.appauth.TokenResponse
 import javax.inject.Inject
 
-class AuthorizationClientAppAuth @Inject constructor(
+class WebApiClientImpl @Inject constructor(
     private val context: Context
-) : AuthorizationClient {
+) : WebApiClient {
 
     override suspend fun exchangeAuthorizationCode(
         clientId: String,

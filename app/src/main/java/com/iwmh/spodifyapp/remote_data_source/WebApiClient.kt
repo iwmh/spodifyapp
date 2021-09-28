@@ -3,7 +3,7 @@ package com.iwmh.spodifyapp.remote_data_source
 import net.openid.appauth.AuthorizationResponse
 import net.openid.appauth.TokenResponse
 
-interface AuthorizationClient {
+interface WebApiClient {
 
     // Receive response with AuthorizationCode
     suspend fun exchangeAuthorizationCode(clientId: String, redirectUrl: String) : AuthorizationResponse

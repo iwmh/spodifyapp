@@ -12,11 +12,11 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class AuthorizationClientModule @Inject constructor(
+class WebApiClientModule @Inject constructor(
 ) {
     @Provides
     @Singleton
-    fun provide(@ApplicationContext context: Context): AuthorizationClient {
-        return AuthorizationClientAppAuth(context)
+    fun provide(@ApplicationContext context: Context): WebApiClient {
+        return WebApiClientImpl(context)
     }
 }

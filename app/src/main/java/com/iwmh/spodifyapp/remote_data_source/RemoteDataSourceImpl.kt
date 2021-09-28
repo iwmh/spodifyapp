@@ -5,7 +5,7 @@ import net.openid.appauth.TokenResponse
 import javax.inject.Inject
 
 class RemoteDataSourceImpl @Inject constructor(
-    private val apiClient: AuthorizationClient
+    private val apiClient: WebApiClient
 ) : RemoteDataSource{
 
     override suspend fun exchangeAuthorizationCode(
