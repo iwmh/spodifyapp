@@ -21,14 +21,24 @@ class MainViewModel @Inject constructor(
     //  (You may delegate some tasks to repositories, but make sure to update this AuthState INSIDE this viewmodel file.)
     private var authState by mutableStateOf(AuthState())
 
+    // State for AppAuth (used when obtaining an authorization code)
+    private var state by mutableStateOf("")
+
+
+
+
+
+    // Update AuthState with AuthorizationResponse/AuthorizationException
     fun updateAuthState(authResponse: AuthorizationResponse?, authException: AuthorizationException?){
         authState.update(authResponse, authException)
     }
 
+    // Update AuthState with TokenResponse/AuthorizationException
     fun updateAuthState(tokenResponse: TokenResponse?, authException: AuthorizationException?){
         authState.update(tokenResponse, authException)
     }
 
+    // Set AuthState instance when
     fun setNewAuthState(newAuthState: AuthState){
         authState = newAuthState
     }
@@ -37,8 +47,20 @@ class MainViewModel @Inject constructor(
         return authState.isAuthorized
     }
 
-    fun userIsLoggedIn() : Boolean{
-        return false
+
+    fun stateValue(): String {
+        return state
+    }
+
+    fun setStateValue(newValue: String){
+        state = newValue
+    }
+
+    fun calculateStateValue(){
+        val randomStringSource = "abcdefghijklmnopqrstuvwxfzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_.-~"
+        var calculatedStateValue = ""
+        for(x in 0 .. 127) calculatedStateValue += randomStringSource.random()
+        setStateValue(calculatedStateValue)
     }
 
 }

@@ -36,9 +36,6 @@ class MainActivity : ComponentActivity() {
     private lateinit var authService: AuthorizationService
     private lateinit var authRequest: AuthorizationRequest
 
-    // State for AppAuth
-    private var stateValue = ""
-
     // launcher to launch the activity for login screen.
     private val launcher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
@@ -62,9 +59,12 @@ class MainActivity : ComponentActivity() {
             mainViewModel.updateAuthState(resp, ex)
 
             // Check if the "state" matches precalculated state value.
-            if(resp.state != this.stateValue){
+            if(resp.state != mainViewModel.stateValue()){
                 throw  Exception("Detected mismatch with state value you calculated. " + ex.toString())
             }
+
+            // Clear the state after confirming you received the expected state.
+            mainViewModel.setStateValue("")
 
             // Exchange the authorization code
             authService.performTokenRequest(
@@ -118,8 +118,9 @@ class MainActivity : ComponentActivity() {
             // prepare for PKCE info
             val codeVerifier = CodeVerifierUtil.generateRandomCodeVerifier()
             val codeChallenge = CodeVerifierUtil.deriveCodeVerifierChallenge(codeVerifier)
-            val randomStringSource = "abcdefghijklmnopqrstuvwxfzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_.-~"
-            for(x in 0 .. 127) stateValue += randomStringSource.random()
+
+            // Calculate the state value
+            mainViewModel.calculateStateValue()
 
             // get secret.json file from "assets" folder
             val secretString = Util.loadJSONFromAsset(this, "secret.json")
@@ -145,7 +146,7 @@ class MainActivity : ComponentActivity() {
                 codeChallenge,
                 CodeVerifierUtil.getCodeVerifierChallengeMethod()
             ).setState(
-                stateValue
+                mainViewModel.stateValue()
             ).build()
 
             authService = AuthorizationService(this)
