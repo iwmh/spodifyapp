@@ -32,9 +32,6 @@ class MainActivity : ComponentActivity() {
     // Viewmodel for this activity.
     private val mainViewModel: MainViewModel by viewModels()
 
-    // AuthorizationService for AppAuth
-    private lateinit var authService: AuthorizationService
-
     // launcher to launch the activity for login screen.
     private val launcher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
@@ -66,20 +63,8 @@ class MainActivity : ComponentActivity() {
             mainViewModel.setStateValue("")
 
             // Exchange the authorization code
-            authService.performTokenRequest(
-                resp.createTokenExchangeRequest()
-            ) { tokenResp, tokenEx ->
-                // update the AuthState
-                mainViewModel.updateAuthState(tokenResp, tokenEx)
+            mainViewModel.exchangeAuthorizationCode(resp)
 
-                if (tokenResp != null){
-                    // Token exchange succeeded.
-
-                } else {
-                    // Token exchange failed, check ex for detail.
-                    throw  Exception("Token exchange failed. " + tokenEx.toString())
-                }
-            }
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -148,12 +133,11 @@ class MainActivity : ComponentActivity() {
                 mainViewModel.stateValue()
             ).build()
 
-            authService = AuthorizationService(this)
             // ---------- ↑ AppAuth Preparation ↑ ----------
 
             setContent {
                 AuthPage(
-                    authService = authService,
+                    viewModel= mainViewModel,
                     authRequest = authRequest,
                     launcher = launcher
                 )
@@ -212,13 +196,13 @@ fun Greeting(name: String, viewModel: MainViewModel) {
 
 @Composable
 fun AuthPage(
-    authService: AuthorizationService,
+    viewModel: MainViewModel,
     authRequest: AuthorizationRequest,
     launcher: ActivityResultLauncher<Intent>
 ){
     Button(
         onClick = {
-            val authIntent = authService.getAuthorizationRequestIntent(authRequest)
+            val authIntent = viewModel.getAuthorizationRequestIntent(authRequest)
             launcher.launch(authIntent)
         },
     ) {

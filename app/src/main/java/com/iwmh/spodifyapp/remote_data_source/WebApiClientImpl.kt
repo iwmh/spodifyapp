@@ -9,27 +9,4 @@ class WebApiClientImpl @Inject constructor(
     private val context: Context
 ) : WebApiClient {
 
-    override suspend fun exchangeAuthorizationCode(
-        clientId: String,
-        redirectUrl: String
-    ): AuthorizationResponse {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun exchangeToken(
-        clientId: String,
-        redirectUrl: String,
-        authorizationCode: String,
-        codeVerifier: String
-    ): TokenResponse {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun refreshToken(
-        clientId: String,
-        redirectUrl: String,
-        refreshToken: String
-    ): TokenResponse {
-        TODO("Not yet implemented")
-    }
 }
