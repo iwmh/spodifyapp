@@ -1,11 +1,10 @@
 package com.iwmh.spodifyapp.remote_data_source
 
-interface RemoteDataSource {
+interface LocalStorage {
 
-    // Store data to local storage.
+    // Store data.
     fun storeData(keyString: String, valueString: String)
 
-    // Read data from local storage.
+    // Read data.
     fun readData(keyString: String): String?
-
 }

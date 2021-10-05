@@ -61,6 +61,7 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+
 }
 
 dependencies {
@@ -78,6 +79,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
+    // Needed for createComposeRule, but not createAndroidComposeRule:
+    debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_version")
 
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha04"
 
@@ -110,11 +113,15 @@ dependencies {
     // for ActivityResultContracts
     implementation "androidx.activity:activity-ktx:1.2.0-alpha03"
 
+    // for EncryptedSharedPreferences
+    implementation "androidx.security:security-crypto:1.1.0-alpha03"
 
 
     // ↓ Testing ↓
     // Core library
     androidTestImplementation 'androidx.test:core:1.4.0'
+    // Kotlin extensions for androidx.test.core
+    androidTestImplementation "androidx.test:core-ktx:1.4.0"
 
     // AndroidJUnitRunner and JUnit Rules
     androidTestImplementation 'androidx.test:runner:1.4.0'
@@ -132,6 +139,11 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-accessibility:3.4.0'
     androidTestImplementation 'androidx.test.espresso:espresso-web:3.4.0'
     androidTestImplementation 'androidx.test.espresso.idling:idling-concurrent:3.4.0'
+    androidTestImplementation 'androidx.test:runner:1.4.0'
+    androidTestImplementation 'androidx.test:rules:1.4.0'
+
+    // UI Automator
+    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 
     // The following Espresso dependency can be either "implementation"
     // or "androidTestImplementation", depending on whether you want the

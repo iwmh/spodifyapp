@@ -1,8 +1,8 @@
 package com.iwmh.spodifyapp.repository
 
-import net.openid.appauth.AuthorizationResponse
-import net.openid.appauth.TokenResponse
-
 interface MainRepository {
 
+    fun storeData(keyString: String, valueString: String)
+
+    fun readData(keyString: String): String?
 }

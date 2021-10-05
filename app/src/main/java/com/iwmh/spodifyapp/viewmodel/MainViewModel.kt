@@ -1,15 +1,13 @@
 package com.iwmh.spodifyapp.viewmodel
 
-import android.app.Application
 import android.content.Intent
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.iwmh.spodifyapp.repository.MainRepository
+import com.iwmh.spodifyapp.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ActivityContext
-import dagger.hilt.android.qualifiers.ApplicationContext
 import net.openid.appauth.*
 import javax.inject.Inject
 
@@ -19,7 +17,7 @@ class MainViewModel @Inject constructor(
 ): ViewModel(){
 
     /***
-     * Fields
+     * -------------------- Fields -----------------------
      */
     // AuthState which this app updates.
     //  (You may delegate some tasks to repositories, but make sure to update this AuthState INSIDE this viewmodel file.)
@@ -31,6 +29,10 @@ class MainViewModel @Inject constructor(
     // AppAuth's AuthorizationService
     @Inject lateinit var authService: AuthorizationService
 
+    /***
+     * ---------------------- Methods ----------------------
+     */
+
     // Dispose authService when ViewModel clears (and when Activity destroys).
     override fun onCleared() {
         super.onCleared()
@@ -38,19 +40,15 @@ class MainViewModel @Inject constructor(
     }
 
     /***
-     * Methods
-     */
-
-    /***
      * --- for "authState"
      */
     // Update AuthState with AuthorizationResponse/AuthorizationException
-    fun updateAuthState(authResponse: AuthorizationResponse?, authException: AuthorizationException?){
+    fun updateAuthStateFromAuthResponse(authResponse: AuthorizationResponse?, authException: AuthorizationException?){
         authState.update(authResponse, authException)
     }
 
     // Update AuthState with TokenResponse/AuthorizationException
-    fun updateAuthState(tokenResponse: TokenResponse?, authException: AuthorizationException?){
+    private fun updateAuthStateFromTokenResponse(tokenResponse: TokenResponse?, authException: AuthorizationException?){
         authState.update(tokenResponse, authException)
     }
 
@@ -62,6 +60,20 @@ class MainViewModel @Inject constructor(
     // See if the token is there and valid.
     fun isAuthorized(): Boolean{
         return authState.isAuthorized
+    }
+
+    // Read AuthState from SharedPreferences and set it to the field.
+    fun readAuthStateStringFromSharedPreferences(): String? {
+        return mainRepository.readData(Constants.auth_state_json)
+    }
+
+    // Update the AuthState and EncryptedSharedPreferences.
+    fun updateAuthStateAndSharedPreferences(tokenResponse: TokenResponse?, authException: AuthorizationException?){
+        // Update AuthState state.
+        updateAuthStateFromTokenResponse(tokenResponse, authException)
+
+        // Update AuthState in the EncryptedSharedPreferences.
+        mainRepository.storeData(Constants.auth_state_json, authState.jsonSerializeString())
     }
 
     /***
@@ -106,7 +118,7 @@ class MainViewModel @Inject constructor(
             }
             // Token exchange succeeded.
             // Update the AuthState
-            updateAuthState(tokenResp, tokenEx)
+            updateAuthStateAndSharedPreferences(tokenResp, tokenEx)
 
             // go on...
 

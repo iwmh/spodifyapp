@@ -44,7 +44,7 @@ class MainActivity : ComponentActivity() {
             // Extract the authorization response and exception.
             val data = activityResult.data
             val resp = AuthorizationResponse.fromIntent(data!!)
-            val ex = AuthorizationException.fromIntent(data!!)
+            val ex = AuthorizationException.fromIntent(data)
 
             if(resp == null){
                 Log.e("AuthorizationActivity", ex.toString())
@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
             }
 
             // update the AuthState
-            mainViewModel.updateAuthState(resp, ex)
+            mainViewModel.updateAuthStateFromAuthResponse(resp, ex)
 
             // Check if the "state" matches precalculated state value.
             if(resp.state != mainViewModel.stateValue()){
@@ -70,9 +70,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Read AuthState from SharedPreferences.
-        val authPrefs = getSharedPreferences("auth", MODE_PRIVATE)
-        val stateJson = authPrefs.getString("stateJson", null)
+        // Read AuthState from SharedPreferences and set it the viewmodel.
+        val stateJson = mainViewModel.readAuthStateStringFromSharedPreferences()
 
         val serviceConfig = AuthorizationServiceConfiguration(
             Uri.parse("https://accounts.spotify.com/authorize"),  // authorization endpoint
@@ -183,14 +182,14 @@ fun SpodifyNavHost(
         modifier = modifier
     ){
         composable("Home"){
-            Greeting(name = "Hiroshi", viewModel = viewModel)
+            Greeting(name = "Hiroshi")
         }
     }
 
 }
 
 @Composable
-fun Greeting(name: String, viewModel: MainViewModel) {
+fun Greeting(name: String) {
     Text(text = " a list of Spotify podcast information .....")
 }
 
