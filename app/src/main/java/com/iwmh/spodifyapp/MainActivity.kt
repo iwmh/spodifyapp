@@ -1,4 +1,4 @@
-package com.iwmh.spodifyapp.view
+package com.iwmh.spodifyapp
 
 import android.app.Activity
 import android.content.Intent
@@ -10,17 +10,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.iwmh.spodifyapp.repository.model.Secret
-import com.iwmh.spodifyapp.ui.theme.SpodifyappTheme
 import com.iwmh.spodifyapp.util.Util
+import com.iwmh.spodifyapp.view.auth.AuthScreen
 import com.iwmh.spodifyapp.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.serialization.decodeFromString
@@ -71,14 +64,17 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         // Read AuthState from SharedPreferences and set it the viewmodel.
-        val stateJson = mainViewModel.readAuthStateStringFromSharedPreferences()
+        var stateJson = mainViewModel.readAuthStateStringFromSharedPreferences()
+        // TODO: For testing. Remove later.
+        stateJson = ""
+        // TODO: For testing. Remove later.
 
         val serviceConfig = AuthorizationServiceConfiguration(
             Uri.parse("https://accounts.spotify.com/authorize"),  // authorization endpoint
             Uri.parse("https://accounts.spotify.com/api/token"),  // token endpoint
         )
 
-        if (stateJson != null){
+        if (!stateJson.isNullOrEmpty()){
             // AuthState successfully read from SharedPreferences.
             // Set it in the viewmodel.
             mainViewModel.setNewAuthState(AuthState.jsonDeserialize(stateJson))
@@ -92,7 +88,7 @@ class MainActivity : ComponentActivity() {
         if(mainViewModel.isAuthorized()){
             // If the user's already logged in, show the home page.
             setContent {
-                SpodifyApp(name = "Hiroshi", viewModel = mainViewModel)
+                SpodifyAppScreen(name = "Hiroshi", viewModel = mainViewModel)
             }
         } else {
             // Otherwise, show the login page.
@@ -131,80 +127,15 @@ class MainActivity : ComponentActivity() {
             ).setState(
                 mainViewModel.stateValue()
             ).build()
-
             // ---------- ↑ AppAuth Preparation ↑ ----------
 
             setContent {
-                AuthPage(
+                AuthScreen(
                     viewModel= mainViewModel,
                     authRequest = authRequest,
                     launcher = launcher
                 )
             }
         }
-
-    }
-
-}
-
-@Composable
-fun SpodifyApp(name: String, viewModel: MainViewModel){
-    SpodifyappTheme {
-        // NavController
-        val navController = rememberNavController()
-
-        Scaffold {
-            // A surface container using the 'background' color from the theme
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colors.background
-            ) {
-                SpodifyNavHost(
-                    navController = navController,
-                    viewModel = viewModel,
-                )
-            }
-        }
-
-    }
-
-}
-
-@Composable
-fun SpodifyNavHost(
-    navController: NavHostController,
-    viewModel: MainViewModel,
-    modifier: Modifier = Modifier
-){
-    NavHost(
-        navController = navController,
-        startDestination = "Home",
-        modifier = modifier
-    ){
-        composable("Home"){
-            Greeting(name = "Hiroshi")
-        }
-    }
-
-}
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = " a list of Spotify podcast information .....")
-}
-
-@Composable
-fun AuthPage(
-    viewModel: MainViewModel,
-    authRequest: AuthorizationRequest,
-    launcher: ActivityResultLauncher<Intent>
-){
-    Button(
-        onClick = {
-            val authIntent = viewModel.getAuthorizationRequestIntent(authRequest)
-            launcher.launch(authIntent)
-        },
-    ) {
-        Text(text = "auth")
     }
 }
