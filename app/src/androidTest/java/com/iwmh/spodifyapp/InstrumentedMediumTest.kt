@@ -2,26 +2,17 @@ package com.iwmh.spodifyapp
 
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
-import androidx.test.core.app.launchActivity
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.UiSelector
-import androidx.test.uiautomator.Until
 import com.iwmh.spodifyapp.util.Constants
-import com.iwmh.spodifyapp.view.Greeting
 import org.junit.Test
-import com.iwmh.spodifyapp.view.MainActivity
 import net.openid.appauth.AuthState
 import org.junit.After
 import org.junit.Before
 
 import org.junit.Rule
-import org.junit.runner.RunWith
 
 private const val LAUNCH_TIMEOUT = 5000L
 
