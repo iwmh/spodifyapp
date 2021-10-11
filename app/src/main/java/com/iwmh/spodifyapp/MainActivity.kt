@@ -129,11 +129,33 @@ class MainActivity : ComponentActivity() {
             ).build()
             // ---------- ↑ AppAuth Preparation ↑ ----------
 
+
+            val uri = Uri.Builder().apply {
+                scheme("https")
+                authority("accounts.spotify.com")
+                appendPath("authorize")
+                appendQueryParameter("client_id", secretData.client_id)
+                appendQueryParameter("response_type", ResponseTypeValues.CODE)
+                appendQueryParameter("redirect_uri", secretData.redirect_url)
+                appendQueryParameter("code_challenge_method", "S256")
+                appendQueryParameter("code_challenge", codeChallenge)
+                appendQueryParameter("state", mainViewModel.stateValue())
+                appendQueryParameter("scope",
+                    "user-modify-playback-state " +
+                    "user-library-modify " +
+                    "playlist-read-private " +
+                    "playlist-modify-public " +
+                    "playlist-modify-private " +
+                    "user-read-playback-state " +
+                    "user-read-currently-playing")
+            }.build()
+
             setContent {
                 AuthScreen(
                     viewModel= mainViewModel,
                     authRequest = authRequest,
-                    launcher = launcher
+                    launcher = launcher,
+                    uri = uri
                 )
             }
         }

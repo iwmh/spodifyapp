@@ -2,10 +2,12 @@ package com.iwmh.spodifyapp
 
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiSelector
 import com.iwmh.spodifyapp.util.Constants
 import org.junit.Test
 import net.openid.appauth.AuthState
@@ -89,7 +91,6 @@ class InstrumentedMediumTest{
      * TODO: It can't navigate to the previous screen when using click() of Uiautomator,
      *       though this should be automated.
      */
-    /*
     @Test
     fun auth_page_to_home_page(){
         // Click the auth button
@@ -113,6 +114,5 @@ class InstrumentedMediumTest{
         composeTestRule.onNodeWithText("auth").assertExists()
 
     }
-     */
 
 }
