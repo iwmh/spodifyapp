@@ -1,44 +1,57 @@
 package com.iwmh.spodifyapp
 
+import android.content.Context
+import android.content.Intent
+import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.matcher.ViewMatchers.assertThat
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.SdkSuppress
 import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.*
 import com.iwmh.spodifyapp.util.Constants
 import org.junit.Test
 import net.openid.appauth.AuthState
+import org.hamcrest.Matchers.notNullValue
 import org.junit.After
 import org.junit.Before
 
 import org.junit.Rule
+import org.junit.runner.RunWith
+import org.junit.runner.manipulation.Ordering
 
 private const val LAUNCH_TIMEOUT = 5000L
 
+private const val WAIT_TIMEOUT = 5000L
+
+@RunWith(AndroidJUnit4::class)
+@SdkSuppress(minSdkVersion = 18)
 class InstrumentedMediumTest{
 
-    @get:Rule
-    val composeTestRule = createAndroidComposeRule<MainActivity>()
+    // Device for UI Automator
+    private lateinit var device: UiDevice
 
+    // Key for EncryptedSharedPreferences.
     private lateinit var mainKey: MasterKey
 
     // initial AuthState value stored in Preferences.
     private var initialAuthState: AuthState = AuthState()
 
-    // Device for UI Automator
-    lateinit var device: UiDevice
+    private var packageName = "com.iwmh.spodifyapp"
 
     @Before
-    fun set(){
+    fun startMainActivityFromHomeScreen() {
+
         // Setup the main key for EncryptedSharedPreferences.
-        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        val context = ApplicationProvider.getApplicationContext<Context>()
         mainKey = MasterKey.Builder(context)
             .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
             .build()
-
-        // Setup the UI device.
-        device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
         // Backup the initial AuthState value.
         val prefs = EncryptedSharedPreferences.create(
@@ -58,8 +71,37 @@ class InstrumentedMediumTest{
         prefs.edit()
             .clear()
             .apply()
-    }
 
+
+
+        // Initialize UiDevice instance
+        device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+
+        // Start from the home screen
+        device.pressHome()
+
+        // Wait for launcher
+        val launcherPackage: String = device.launcherPackageName
+        assertThat(launcherPackage, notNullValue())
+        device.wait(
+            Until.hasObject(By.pkg(launcherPackage).depth(0)),
+            LAUNCH_TIMEOUT
+        )
+
+        // Launch the app
+        val intent = context.packageManager.getLaunchIntentForPackage(
+            packageName)?.apply {
+            // Clear out any previous instances
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        }
+        context.startActivity(intent)
+
+        // Wait for the app to appear
+        device.wait(
+            Until.hasObject(By.pkg(packageName).depth(0)),
+            LAUNCH_TIMEOUT
+        )
+    }
 
     @After
     fun end(){
@@ -80,39 +122,46 @@ class InstrumentedMediumTest{
     }
 
     @Test
-    fun first_startup_shows_auth_button(){
-        // Auth button exists.
-        composeTestRule.onNodeWithText("auth").assertExists()
-    }
-
-    /***
-     * TODO: It can't navigate to the previous screen when using click() of Uiautomator,
-     *       though this should be automated.
-     */
-    /*
-    @Test
     fun auth_page_to_home_page(){
-        // Click the auth button
-        composeTestRule.onNodeWithText("auth").performClick()
 
-        Thread.sleep(2000)
+        var auth = device.findObject(
+            UiSelector().text("auth")
+        )
+        auth.click()
 
-        // scroll to the end.
-        device.swipe(device.displayWidth/2, device.displayHeight, device.displayWidth/2, 10, 2)
-
-        Thread.sleep(2000)
-
-        var button = device.findObject(
-            UiSelector().text("CANCEL")
+        // Wait until the Spotify authorization page is shown.
+        device.wait(
+            Until.findObject(
+                By.textContains("You agree that")
+            ), WAIT_TIMEOUT
         )
 
+        // scroll to the end.
+        device.swipe(
+            device.displayWidth/2,
+            device.displayHeight - 100,
+            device.displayWidth/2,
+            100, 2)
+
+        // Click AGREE button.
+        var button = device.wait(
+            Until.findObject(
+                By.text("AGREE")
+            ), WAIT_TIMEOUT
+        )
         button.click()
 
-        Thread.sleep(2000)
-
-        composeTestRule.onNodeWithText("auth").assertExists()
+        // auth button exists again
+        device.wait(
+            Until.findObject(
+                By.text("auth")
+            ), WAIT_TIMEOUT
+        )
+        var authAgain = device.findObject(
+            UiSelector().text("auth")
+        )
+        assert(authAgain.exists())
 
     }
-     */
 
 }
