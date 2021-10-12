@@ -12,5 +12,13 @@ describe('', () => {
 
         await SpotifyScreen.waitForScreenIsShown(true);
 
+        /*
+        TODO: It needs scrolling to the bottom.
+        */
+
+        await SpotifyScreen.waitForAgreeButtonIsShown(true);
+
+        await SpotifyScreen.tapAgreeButton();
     });
+
 });
