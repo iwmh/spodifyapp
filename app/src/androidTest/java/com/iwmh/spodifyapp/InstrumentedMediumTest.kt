@@ -15,13 +15,10 @@ import androidx.test.filters.SdkSuppress
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.*
 import com.iwmh.spodifyapp.util.Constants
-import org.junit.Test
 import net.openid.appauth.AuthState
 import org.hamcrest.Matchers.notNullValue
-import org.junit.After
-import org.junit.Before
+import org.junit.*
 
-import org.junit.Rule
 import org.junit.runner.RunWith
 import org.junit.runner.manipulation.Ordering
 
@@ -33,46 +30,72 @@ private const val WAIT_TIMEOUT = 5000L
 @SdkSuppress(minSdkVersion = 18)
 class InstrumentedMediumTest{
 
-    // Device for UI Automator
-    private lateinit var device: UiDevice
+    companion object {
 
-    // Key for EncryptedSharedPreferences.
-    private lateinit var mainKey: MasterKey
+        // Device for UI Automator
+        private lateinit var device: UiDevice
 
-    // initial AuthState value stored in Preferences.
-    private var initialAuthState: AuthState = AuthState()
+        // Key for EncryptedSharedPreferences.
+        private lateinit var mainKey: MasterKey
 
-    private var packageName = "com.iwmh.spodifyapp"
+        // initial AuthState value stored in Preferences.
+        private var initialAuthState: AuthState = AuthState()
 
-    @Before
-    fun startMainActivityFromHomeScreen() {
+        private var packageName = "com.iwmh.spodifyapp"
 
-        // Setup the main key for EncryptedSharedPreferences.
-        val context = ApplicationProvider.getApplicationContext<Context>()
-        mainKey = MasterKey.Builder(context)
-            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-            .build()
+        @BeforeClass
+        @JvmStatic
+        fun init() {
 
-        // Backup the initial AuthState value.
-        val prefs = EncryptedSharedPreferences.create(
-            context,
-            Constants.shared_prefs_file,
-            mainKey,
-            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-        )
+            // Setup the main key for EncryptedSharedPreferences.
+            val context = ApplicationProvider.getApplicationContext<Context>()
+            mainKey = MasterKey.Builder(context)
+                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                .build()
 
-        val initialAuthStateString = prefs.getString(Constants.auth_state_json, "")
-        if (!initialAuthStateString.isNullOrEmpty()) {
-            initialAuthState = AuthState.jsonDeserialize(initialAuthStateString)
+            // Backup the initial AuthState value.
+            val prefs = EncryptedSharedPreferences.create(
+                context,
+                Constants.shared_prefs_file,
+                mainKey,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            )
+
+            val initialAuthStateString = prefs.getString(Constants.auth_state_json, "")
+            if (!initialAuthStateString.isNullOrEmpty()) {
+                initialAuthState = AuthState.jsonDeserialize(initialAuthStateString)
+            }
+
+            // Remove all the EncryptedSharedPreferences.
+            prefs.edit()
+                .clear()
+                .apply()
         }
 
-        // Remove all the EncryptedSharedPreferences.
-        prefs.edit()
-            .clear()
-            .apply()
+        @AfterClass
+        @JvmStatic
+        fun end() {
 
+            // Restore the initial AuthState value.
+            val context = InstrumentationRegistry.getInstrumentation().targetContext
+            val prefs = EncryptedSharedPreferences.create(
+                context,
+                Constants.shared_prefs_file,
+                mainKey,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            )
+            prefs.edit()
+                .putString(Constants.auth_state_json, initialAuthState.jsonSerializeString())
+                .apply()
 
+        }
+    }
+
+    @Before
+    fun startApp(){
+        val context = ApplicationProvider.getApplicationContext<Context>()
 
         // Initialize UiDevice instance
         device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
@@ -90,7 +113,8 @@ class InstrumentedMediumTest{
 
         // Launch the app
         val intent = context.packageManager.getLaunchIntentForPackage(
-            packageName)?.apply {
+            packageName
+        )?.apply {
             // Clear out any previous instances
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         }
@@ -101,24 +125,6 @@ class InstrumentedMediumTest{
             Until.hasObject(By.pkg(packageName).depth(0)),
             LAUNCH_TIMEOUT
         )
-    }
-
-    @After
-    fun end(){
-
-        // Restore the initial AuthState value.
-        val context = InstrumentationRegistry.getInstrumentation().targetContext
-        val prefs = EncryptedSharedPreferences.create(
-            context,
-            Constants.shared_prefs_file,
-            mainKey,
-            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-        )
-        prefs.edit()
-            .putString(Constants.auth_state_json, initialAuthState.jsonSerializeString())
-            .apply()
-
     }
 
     @Test
@@ -161,7 +167,52 @@ class InstrumentedMediumTest{
             UiSelector().text("auth")
         )
         assert(authAgain.exists())
-
     }
+
+
+
+    @Test
+    fun auth_page_to_home_page2(){
+
+        var auth = device.findObject(
+            UiSelector().text("auth")
+        )
+        auth.click()
+
+        // Wait until the Spotify authorization page is shown.
+        device.wait(
+            Until.findObject(
+                By.textContains("You agree that")
+            ), WAIT_TIMEOUT
+        )
+
+        // scroll to the end.
+        device.swipe(
+            device.displayWidth/2,
+            device.displayHeight - 100,
+            device.displayWidth/2,
+            100, 2)
+
+        // Click AGREE button.
+        var button = device.wait(
+            Until.findObject(
+                By.text("AGREE")
+            ), WAIT_TIMEOUT
+        )
+        button.click()
+
+        // auth button exists again
+        device.wait(
+            Until.findObject(
+                By.text("auth")
+            ), WAIT_TIMEOUT
+        )
+        var authAgain = device.findObject(
+            UiSelector().text("auth")
+        )
+        assert(authAgain.exists())
+    }
+
+
 
 }
