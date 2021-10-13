@@ -66,7 +66,7 @@ class MainActivity : ComponentActivity() {
         // Read AuthState from SharedPreferences and set it the viewmodel.
         var stateJson = mainViewModel.readAuthStateStringFromSharedPreferences()
         // TODO: For testing. Remove later.
-        stateJson = ""
+//        stateJson = ""
         // TODO: For testing. Remove later.
 
         val serviceConfig = AuthorizationServiceConfiguration(
