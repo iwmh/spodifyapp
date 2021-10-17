@@ -171,48 +171,6 @@ class InstrumentedMediumTest{
 
 
 
-    @Test
-    fun auth_page_to_home_page2(){
-
-        var auth = device.findObject(
-            UiSelector().text("auth")
-        )
-        auth.click()
-
-        // Wait until the Spotify authorization page is shown.
-        device.wait(
-            Until.findObject(
-                By.textContains("You agree that")
-            ), WAIT_TIMEOUT
-        )
-
-        // scroll to the end.
-        device.swipe(
-            device.displayWidth/2,
-            device.displayHeight - 100,
-            device.displayWidth/2,
-            100, 2)
-
-        // Click AGREE button.
-        var button = device.wait(
-            Until.findObject(
-                By.text("AGREE")
-            ), WAIT_TIMEOUT
-        )
-        button.click()
-
-        // auth button exists again
-        device.wait(
-            Until.findObject(
-                By.text("auth")
-            ), WAIT_TIMEOUT
-        )
-        var authAgain = device.findObject(
-            UiSelector().text("auth")
-        )
-        assert(authAgain.exists())
-    }
-
 
 
 }
