@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Search
@@ -22,7 +21,6 @@ import com.iwmh.spodifyapp.ui.theme.SpodifyappTheme
 import com.iwmh.spodifyapp.view.home.HomeScreen
 import com.iwmh.spodifyapp.view.library.LibraryScreen
 import com.iwmh.spodifyapp.view.search.SearchScreen
-import com.iwmh.spodifyapp.viewmodel.MainViewModel
 
 sealed class Screen(val route: String, val name: String, val iconVector: ImageVector) {
     object Home : Screen("home", "Home", Icons.Default.Home)

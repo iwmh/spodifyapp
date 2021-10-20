@@ -1,4 +1,4 @@
-package com.iwmh.spodifyapp.viewmodel
+package com.iwmh.spodifyapp
 
 import android.content.Intent
 import androidx.compose.runtime.getValue

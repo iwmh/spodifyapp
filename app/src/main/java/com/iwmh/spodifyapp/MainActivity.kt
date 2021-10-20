@@ -14,7 +14,6 @@ import androidx.compose.material.*
 import com.iwmh.spodifyapp.repository.model.Secret
 import com.iwmh.spodifyapp.util.Util
 import com.iwmh.spodifyapp.view.auth.AuthScreen
-import com.iwmh.spodifyapp.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
