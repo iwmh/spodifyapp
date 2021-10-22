@@ -3,13 +3,15 @@ package com.iwmh.spodifyapp.remote_data_source
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
-@InstallIn(ViewModelComponent::class)
+@InstallIn(SingletonComponent::class)
 class RemoteDataSourceModule {
 
     @Provides
+    @Singleton
     fun provideRemoteDataSource(remoteDataSourceImpl: RemoteDataSourceImpl) : RemoteDataSource{
         return remoteDataSourceImpl
     }
