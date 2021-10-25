@@ -4,13 +4,13 @@ import android.content.Context
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import net.openid.appauth.*
 import javax.inject.Inject
 
 @Module
-@InstallIn(ViewModelComponent::class)
+@InstallIn(SingletonComponent::class)
 class AppAuthAuthorizationServiceModule @Inject constructor(
 ) {
     @Provides
