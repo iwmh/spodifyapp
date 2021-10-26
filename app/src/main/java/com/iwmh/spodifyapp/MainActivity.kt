@@ -57,6 +57,10 @@ class MainActivity : ComponentActivity() {
             // Exchange the authorization code
             mainViewModel.exchangeAuthorizationCode(resp)
 
+            // Shows the main screen.
+            setContent {
+                SpodifyAppScreen(name = "Hiroshi", viewModel = mainViewModel)
+            }
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {

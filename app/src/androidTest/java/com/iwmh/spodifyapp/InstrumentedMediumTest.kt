@@ -164,7 +164,7 @@ class InstrumentedMediumTest{
             ), WAIT_TIMEOUT
         )
         var authAgain = device.findObject(
-            UiSelector().text("auth")
+            UiSelector().text("Home")
         )
         assert(authAgain.exists())
     }
