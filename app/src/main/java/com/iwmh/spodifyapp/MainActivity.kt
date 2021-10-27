@@ -132,10 +132,11 @@ class MainActivity : ComponentActivity() {
             ).build()
             // ---------- ↑ AppAuth Preparation ↑ ----------
 
+            val authIntent = mainViewModel.getAuthorizationRequestIntent(authRequest)
+
             setContent {
                 AuthScreen(
-                    viewModel= mainViewModel,
-                    authRequest = authRequest,
+                    authIntent = authIntent,
                     launcher = launcher
                 )
             }
