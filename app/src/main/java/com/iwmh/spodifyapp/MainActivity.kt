@@ -68,9 +68,6 @@ class MainActivity : ComponentActivity() {
 
         // Read AuthState from SharedPreferences and set it the viewmodel.
         var stateJson = mainViewModel.readAuthStateStringFromSharedPreferences()
-        // TODO: For testing. Remove later.
-//        stateJson = ""
-        // TODO: For testing. Remove later.
 
         val serviceConfig = AuthorizationServiceConfiguration(
             Uri.parse("https://accounts.spotify.com/authorize"),  // authorization endpoint
@@ -116,13 +113,18 @@ class MainActivity : ComponentActivity() {
                 ResponseTypeValues.CODE,            // the response_type value: we want a code
                 Uri.parse(secretData.redirect_url)  // the redirect URI to which the auth response is sent
             ).setScope(                             // the scopes
-                "user-modify-playback-state " +
-                        "user-library-modify " +
-                        "playlist-read-private " +
-                        "playlist-modify-public " +
-                        "playlist-modify-private " +
-                        "user-read-playback-state " +
-                        "user-read-currently-playing"
+                        "playlist-modify-private" + " " +
+                        "playlist-read-private" + " " +
+                        "playlist-modify-public" + " " +
+                        "playlist-read-collaborative" + " " +
+                        "user-read-private" + " " +
+                        "user-read-playback-state" + " " +
+                        "user-modify-playback-state" + " " +
+                        "user-read-currently-playing" + " " +
+                        "user-library-modify" + " " +
+                        "user-library-read" + " " +
+                        "app-remote-control" + " " +
+                        "streaming" + " "
             ).setCodeVerifier(
                 codeVerifier,
                 codeChallenge,

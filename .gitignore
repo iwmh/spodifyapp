@@ -18,3 +18,4 @@ local.properties
 /.idea/vcs.xml
 /app/src/main/assets/secret.json
 node_modules
+/.idea/deploymentTargetDropDown.xml

@@ -50,7 +50,7 @@ fun SpodifyAppScreen(name: String, viewModel: MainViewModel){
                             selected = currentDestination?.hierarchy?.any{it.route == screen.route} == true,
                             onClick = {
                                 navController.navigate(screen.route){
-                                    // TODO: Limit the max stack number.
+                                    // TODO: Make sure to limit the max stack number.
 //                                    popUpTo(navController.graph.findStartDestination().id){
 //                                        saveState = true
 //                                    }
@@ -72,7 +72,6 @@ fun SpodifyAppScreen(name: String, viewModel: MainViewModel){
             ) {
                 SpodifyNavHost(
                     navController = navController,
-                    viewModel = viewModel,
                     Modifier.padding(innerPadding)
                 )
             }
@@ -83,7 +82,6 @@ fun SpodifyAppScreen(name: String, viewModel: MainViewModel){
 @Composable
 fun SpodifyNavHost(
     navController: NavHostController,
-    viewModel: MainViewModel,
     modifier: Modifier = Modifier
 ){
     NavHost(

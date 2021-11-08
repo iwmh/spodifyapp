@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.iwmh.spodifyapp.repository.MainRepository
 import com.iwmh.spodifyapp.util.Constants
 import net.openid.appauth.*
 import javax.inject.Inject
@@ -12,7 +11,7 @@ import javax.inject.Singleton
 
 @Singleton
 class AuthStateManager @Inject constructor(
-    private val mainRepository: MainRepository,
+    private val localStorage: LocalStorage,
 ) {
 
     /***
@@ -20,10 +19,10 @@ class AuthStateManager @Inject constructor(
      */
     // AuthState which this app updates.
     //  (You may delegate some tasks to repositories, but make sure to update this AuthState INSIDE this viewmodel file.)
-    private var authState by mutableStateOf(AuthState())
+    var authState by mutableStateOf(AuthState())
 
     // State for AppAuth (used when obtaining an authorization code)
-    private var state by mutableStateOf("")
+    private var _state by mutableStateOf("")
 
     // AppAuth's AuthorizationService
     @Inject lateinit var authService: AuthorizationService
@@ -31,6 +30,12 @@ class AuthStateManager @Inject constructor(
     /***
      * --- for "authState"
      */
+
+    // Update AuthState in EncryptedSharedPreferences with the current AuthState state.
+    fun updateAuthStateInStorage(){
+        localStorage.storeData(Constants.auth_state_json, authState.jsonSerializeString())
+    }
+
     // Update AuthState with AuthorizationResponse/AuthorizationException
     fun updateAuthStateFromAuthResponse(authResponse: AuthorizationResponse?, authException: AuthorizationException?){
         authState.update(authResponse, authException)
@@ -53,7 +58,7 @@ class AuthStateManager @Inject constructor(
 
     // Read AuthState from SharedPreferences and set it to the field.
     fun readAuthStateStringFromSharedPreferences(): String? {
-        return mainRepository.readData(Constants.auth_state_json)
+        return localStorage.readData(Constants.auth_state_json)
     }
 
     // Update the AuthState and EncryptedSharedPreferences.
@@ -62,7 +67,7 @@ class AuthStateManager @Inject constructor(
         updateAuthStateFromTokenResponse(tokenResponse, authException)
 
         // Update AuthState in the EncryptedSharedPreferences.
-        mainRepository.storeData(Constants.auth_state_json, authState.jsonSerializeString())
+        localStorage.storeData(Constants.auth_state_json, authState.jsonSerializeString())
     }
 
     /***
@@ -70,12 +75,12 @@ class AuthStateManager @Inject constructor(
      */
     // Get the "state" value.
     fun stateValue(): String {
-        return state
+        return _state
     }
 
     // Just set the new "state" value.
     fun setStateValue(newValue: String){
-        state = newValue
+        _state = newValue
     }
 
     // Generate the "state" value.

@@ -1,5 +1,7 @@
 package com.iwmh.spodifyapp.remote_data_source
 
+import com.iwmh.spodifyapp.repository.model.api.ItemShow
+import com.iwmh.spodifyapp.repository.model.api.PagingObject
 import javax.inject.Inject
 
 class RemoteDataSourceImpl @Inject constructor(
@@ -15,6 +17,14 @@ class RemoteDataSourceImpl @Inject constructor(
     // Read data.
     override fun readData(keyString: String): String? {
         return localStorage.readData(keyString)
+    }
+
+    override suspend fun refreshTokensIfNecessary(): String {
+        return apiClient.refreshTokensIfNecessary()
+    }
+
+    override suspend fun getUsersSavedShows(): PagingObject<ItemShow> {
+        return apiClient.getUsersSavedShows()
     }
 
 }
