@@ -2,6 +2,7 @@ package com.iwmh.spodifyapp.view.library
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -15,14 +16,17 @@ fun LibraryScreen(name: String) {
     val viewModel: LibraryScreenViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
 
-
-    Text(text = "You library.")
-
     Column() {
-        uiState.followingShows.forEach{
-            Text(text = it.show.name)
+        Text(text = "Your library.")
+        LazyColumn() {
+            items(uiState.followingShows){
+//                Text(text = it.show.name)
+                ShowCardSquare(show = it.show)
+            }
         }
     }
+
+
 
 
 
