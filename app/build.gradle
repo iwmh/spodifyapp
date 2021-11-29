@@ -131,6 +131,10 @@ dependencies {
     // Coil for Image
     implementation "io.coil-kt:coil-compose:1.4.0"
 
+    // for Paging
+    implementation "androidx.paging:paging-runtime:3.0.1"
+    implementation "androidx.paging:paging-compose:1.0.0-alpha14"
+
     // ↓ Testing ↓
     // Core library
     androidTestImplementation 'androidx.test:core:1.4.0'

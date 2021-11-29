@@ -12,6 +12,4 @@ interface MainRepository {
     // Make sure to call this before every API call.
     suspend fun refreshTokensIfNecessary(): String
 
-    // Get User's Saved Shows
-    suspend fun getUsersSavedShows(): PagingObject<ItemShow>
 }

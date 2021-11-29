@@ -8,5 +8,5 @@ interface WebApiClient {
     suspend fun refreshTokensIfNecessary(): String
 
     // Get User's Saved Shows
-    suspend fun getUsersSavedShows(): PagingObject<ItemShow>
+    suspend fun getUsersSavedShows(url: String?): PagingObject<ItemShow>
 }

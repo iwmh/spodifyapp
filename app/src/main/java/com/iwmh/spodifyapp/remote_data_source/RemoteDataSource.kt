@@ -11,9 +11,10 @@ interface RemoteDataSource {
     // Read data from local storage.
     fun readData(keyString: String): String?
 
-    // Get User's saved shows
-    suspend fun getUsersSavedShows(): PagingObject<ItemShow>
-
     // Make sure to call this before every API call.
     suspend fun refreshTokensIfNecessary(): String
+
+    // Get User's saved shows
+    suspend fun getUsersSavedShows(url: String?): PagingObject<ItemShow>
+
 }

@@ -2,6 +2,10 @@ package com.iwmh.spodifyapp.view.library
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.cachedIn
+import com.iwmh.spodifyapp.repository.MainPagingSource
 import com.iwmh.spodifyapp.repository.MainRepository
 import com.iwmh.spodifyapp.repository.model.ShowsFeed
 import com.iwmh.spodifyapp.repository.model.api.ItemShow
@@ -18,49 +22,50 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LibraryScreenViewModel @Inject constructor (
-    private val mainRepository: MainRepository
+    private val mainPagingSource: MainPagingSource
 ): ViewModel() {
 
-    private val viewModelState = MutableStateFlow(LibraryViewModelState(isLoading = true))
+//    private val uiState = MutableStateFlow(LibraryViewUiState(isLoading = true))
 
-    val uiState = viewModelState
-        .map { it.toUiState() }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.Eagerly,
-            viewModelState.value.toUiState()
-        )
+    var pagingFlow = Pager(
+        PagingConfig(pageSize = 20)
+    ){
+        mainPagingSource
+    }.flow.cachedIn(viewModelScope)
+
+//    val uiState = viewModelState
+//        .map { it.toUiState() }
+//        .stateIn(
+//            viewModelScope,
+//            SharingStarted.Eagerly,
+//            viewModelState.value.toUiState()
+//        )
 
     init {
         refreshShows()
-
-        viewModelScope.launch {
-
-
-       }
-
     }
 
-    fun refreshShows(){
-
+    private fun refreshShows(){
+/*
         val authExceptionHandler = CoroutineExceptionHandler{ _, exception ->
             // TODO: Unconfirmed that the AuthenticationException is caught here.
             // TODO: Navigate the user to login again.
-            viewModelState.update {
+            uiState.update {
                 it.copy(isLoading = false, errorMessages = listOf("An error occurred. Please try again."))
             }
         }
 
-        viewModelState.update { it.copy(isLoading = true) }
+        uiState.update { it.copy(isLoading = true) }
 
         viewModelScope.launch(authExceptionHandler) {
             mainRepository.refreshTokensIfNecessary()
-            var result = mainRepository.getUsersSavedShows()
-            viewModelState.update {
-                it.copy(isLoading = false, showsFeed = ShowsFeed(followingShows = result.items))
+//            var result = mainRepository.getUsersSavedShows()
+
+            uiState.update {
+                it.copy(isLoading = false, followingShows = result.items))
             }
         }
-
+*/
 
 
 //        try {
@@ -80,7 +85,7 @@ class LibraryScreenViewModel @Inject constructor (
 //                it.copy(isLoading = false, errorMessages = listOf("An error occurred. Please try again."))
 //            }
 //        }
-    }
+//    }
 }
 
 //sealed interface LibraryViewUiState {
@@ -105,17 +110,17 @@ data class LibraryViewUiState (
 )
 
 
-private data class LibraryViewModelState(
-    val showsFeed: ShowsFeed = ShowsFeed(followingShows = emptyList()),
-    val isLoading: Boolean = false,
-    val errorMessages: List<String> = emptyList(),
-){
-    fun toUiState(): LibraryViewUiState =
-            LibraryViewUiState(
-                isLoading = isLoading,
-                errorMessages = errorMessages,
-                followingShows = showsFeed.followingShows
-            )
+//private data class LibraryViewModelState(
+//    val showsFeed: ShowsFeed = ShowsFeed(followingShows = emptyList()),
+//    val isLoading: Boolean = false,
+//    val errorMessages: List<String> = emptyList(),
+//){
+//    fun toUiState(): LibraryViewUiState =
+//            LibraryViewUiState(
+//                isLoading = isLoading,
+//                errorMessages = errorMessages,
+//                followingShows = showsFeed.followingShows
+//            )
 
 //    fun toUiState(): LibraryViewUiState =
 //        if (showsFeed == null){

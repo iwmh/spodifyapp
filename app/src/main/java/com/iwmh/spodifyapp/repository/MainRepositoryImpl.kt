@@ -23,7 +23,4 @@ class MainRepositoryImpl @Inject constructor(
         return remoteDataSource.refreshTokensIfNecessary()
     }
 
-    override suspend fun getUsersSavedShows(): PagingObject<ItemShow> {
-        return remoteDataSource.getUsersSavedShows()
-    }
 }

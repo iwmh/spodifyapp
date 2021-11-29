@@ -23,8 +23,8 @@ class RemoteDataSourceImpl @Inject constructor(
         return apiClient.refreshTokensIfNecessary()
     }
 
-    override suspend fun getUsersSavedShows(): PagingObject<ItemShow> {
-        return apiClient.getUsersSavedShows()
+    override suspend fun getUsersSavedShows(url: String?): PagingObject<ItemShow> {
+        return apiClient.getUsersSavedShows(url)
     }
 
 }

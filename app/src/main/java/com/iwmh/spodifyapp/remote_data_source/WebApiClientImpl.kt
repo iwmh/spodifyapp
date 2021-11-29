@@ -43,9 +43,9 @@ class WebApiClientImpl @Inject constructor(
     }
 
     // Get User's Saved Shows
-    override suspend fun getUsersSavedShows(): PagingObject<ItemShow> {
+    override suspend fun getUsersSavedShows(initialUrl: String?): PagingObject<ItemShow> {
 
-        val url = injectableConstants.baseUrl + "/me/shows";
+        val url = initialUrl ?: injectableConstants.baseUrl + "/me/shows"
 
         // Make a request to API endpoint.
         val request = Request.Builder()
