@@ -14,6 +14,10 @@ class MainPagingSource @Inject constructor(
     private val injectableConstants: InjectableConstants,
 ) : PagingSource<String, ItemShow>() {
 
+    /**
+     * Remember to call refreshTokensIfNecessary() before any api call.
+     */
+
     override fun getRefreshKey(state: PagingState<String, ItemShow>): String? {
         var anchor = state.anchorPosition
         return injectableConstants.baseUrl + "/me/shows";
@@ -21,6 +25,7 @@ class MainPagingSource @Inject constructor(
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, ItemShow> {
         return try {
+            remoteDataSource.refreshTokensIfNecessary()
             val response = remoteDataSource.getUsersSavedShows(params.key)
             LoadResult.Page(
                 data = response.items,

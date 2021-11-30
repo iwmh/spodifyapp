@@ -23,6 +23,7 @@ fun LibraryScreen(name: String) {
 
     Column {
         Text(text = "Your library.")
+        Text(text = lazyPagingItems.itemCount.toString())
         LazyColumn {
             items(lazyPagingItems) { item ->
                 ShowCardSquare(show = item!!.show)
