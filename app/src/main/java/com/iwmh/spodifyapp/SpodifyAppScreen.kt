@@ -12,9 +12,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.iwmh.spodifyapp.repository.MainPagingSource
 import com.iwmh.spodifyapp.ui.theme.SpodifyappTheme
+import javax.inject.Inject
 
 sealed class Screen(val route: String, val name: String, val iconVector: ImageVector) {
     object Home : Screen("home", "Home", Icons.Default.Home)
@@ -23,13 +26,14 @@ sealed class Screen(val route: String, val name: String, val iconVector: ImageVe
 }
 
 @Composable
-fun SpodifyAppScreen(name: String, viewModel: MainViewModel){
+fun SpodifyAppScreen(mainPagingSource: MainPagingSource){
     SpodifyappTheme {
         val items = listOf(
             Screen.Home,
             Screen.Search,
             Screen.Library
         )
+
         // NavController
         val navController = rememberNavController()
         Scaffold(
@@ -45,9 +49,9 @@ fun SpodifyAppScreen(name: String, viewModel: MainViewModel){
                             onClick = {
                                 navController.navigate(screen.route){
                                     // TODO: Make sure to limit the max stack number.
-//                                    popUpTo(navController.graph.findStartDestination().id){
-//                                        saveState = true
-//                                    }
+                                    popUpTo(navController.graph.findStartDestination().id){
+                                        saveState = true
+                                    }
                                     launchSingleTop = true
                                     restoreState = true
                                 }
@@ -66,7 +70,8 @@ fun SpodifyAppScreen(name: String, viewModel: MainViewModel){
             ) {
                 MainNavGraph(
                     navController = navController,
-                    Modifier.padding(innerPadding)
+                    Modifier.padding(innerPadding),
+                    mainPagingSource
                 )
             }
         }

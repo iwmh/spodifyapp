@@ -11,6 +11,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.material.*
+import com.iwmh.spodifyapp.repository.MainPagingSource
 import com.iwmh.spodifyapp.repository.model.Secret
 import com.iwmh.spodifyapp.util.Util
 import com.iwmh.spodifyapp.view.auth.AuthScreen
@@ -18,11 +19,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import net.openid.appauth.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     // Viewmodel for this activity.
     private val mainViewModel: MainViewModel by viewModels()
+
+    @Inject lateinit var mainPagingSource: MainPagingSource
 
     // launcher to launch the activity for login screen.
     private val launcher: ActivityResultLauncher<Intent> =
@@ -59,7 +63,7 @@ class MainActivity : ComponentActivity() {
 
             // Shows the main screen.
             setContent {
-                SpodifyAppScreen(name = "Hiroshi", viewModel = mainViewModel)
+                SpodifyAppScreen(mainPagingSource)
             }
         }
 
@@ -88,7 +92,7 @@ class MainActivity : ComponentActivity() {
         if(mainViewModel.isAuthorized()){
             // If the user's already logged in, show the home page.
             setContent {
-                SpodifyAppScreen(name = "Hiroshi", viewModel = mainViewModel)
+                SpodifyAppScreen(mainPagingSource)
             }
         } else {
             // Otherwise, show the login page.

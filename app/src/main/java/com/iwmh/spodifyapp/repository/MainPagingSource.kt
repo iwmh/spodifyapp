@@ -7,8 +7,9 @@ import com.iwmh.spodifyapp.repository.model.api.ItemShow
 import com.iwmh.spodifyapp.util.InjectableConstants
 import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@ViewModelScoped
+@Singleton
 class MainPagingSource @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
     private val injectableConstants: InjectableConstants,

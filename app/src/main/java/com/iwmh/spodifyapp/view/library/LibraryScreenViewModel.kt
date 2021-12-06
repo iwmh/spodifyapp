@@ -1,6 +1,7 @@
 package com.iwmh.spodifyapp.view.library
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -20,7 +21,6 @@ import okhttp3.internal.wait
 import java.lang.Exception
 import javax.inject.Inject
 
-@HiltViewModel
 class LibraryScreenViewModel @Inject constructor (
     private val mainPagingSource: MainPagingSource
 ): ViewModel() {
@@ -135,5 +135,19 @@ data class LibraryViewUiState (
 //                followingShows = showsFeed.followingShows
 //            )
 //        }
+
+    /**
+     * Factory for HomeViewModel that takes PostsRepository as a dependency
+     */
+    companion object {
+        fun provideFactory(
+                mainPagingSource: MainPagingSource
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+                return LibraryScreenViewModel(mainPagingSource) as T
+            }
+        }
+    }
 
 }

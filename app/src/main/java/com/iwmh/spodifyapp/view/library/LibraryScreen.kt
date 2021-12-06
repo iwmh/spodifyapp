@@ -15,8 +15,8 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 
 @Composable
-fun LibraryScreen(name: String) {
-    val viewModel: LibraryScreenViewModel = hiltViewModel()
+fun LibraryScreen(viewModel: LibraryScreenViewModel) {
+//    val viewModel: LibraryScreenViewModel = hiltViewModel()
 //    val uiState by viewModel.uiState.collectAsState()
 
     val lazyPagingItems = viewModel.pagingFlow.collectAsLazyPagingItems()
