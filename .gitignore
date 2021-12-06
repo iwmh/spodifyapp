@@ -19,3 +19,4 @@ local.properties
 /app/src/main/assets/secret.json
 node_modules
 /.idea/deploymentTargetDropDown.xml
+/.idea/Project.xml
