@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.iwmh.spodifyapp.ui.theme.SpodifyappTheme
@@ -44,10 +45,13 @@ fun SpodifyAppScreen(name: String, viewModel: MainViewModel){
                             selected = currentDestination?.hierarchy?.any{it.route == screen.route} == true,
                             onClick = {
                                 navController.navigate(screen.route){
-                                    // TODO: Make sure to limit the max stack number.
-//                                    popUpTo(navController.graph.findStartDestination().id){
-//                                        saveState = true
-//                                    }
+                                    /***
+                                     * TODO: Reluctant to activate this. This prevents the app to clear the viewmodel when reaching the the nav destination.
+                                     * Not the Spotify official app's way it looks, but this is just a workaround to keep viewmodel to uncleared.
+                                     */
+                                    popUpTo(navController.graph.findStartDestination().id){
+                                        saveState = true
+                                    }
                                     launchSingleTop = true
                                     restoreState = true
                                 }
