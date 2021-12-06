@@ -10,6 +10,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.*
 import com.iwmh.spodifyapp.repository.model.Secret
 import com.iwmh.spodifyapp.util.Util
@@ -25,6 +26,7 @@ class MainActivity : ComponentActivity() {
     private val mainViewModel: MainViewModel by viewModels()
 
     // launcher to launch the activity for login screen.
+    @ExperimentalAnimationApi
     private val launcher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
 
@@ -63,6 +65,7 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+    @ExperimentalAnimationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

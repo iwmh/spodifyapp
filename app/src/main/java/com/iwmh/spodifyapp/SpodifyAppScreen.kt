@@ -1,5 +1,6 @@
 package com.iwmh.spodifyapp
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
@@ -14,6 +15,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.iwmh.spodifyapp.ui.theme.SpodifyappTheme
 
 sealed class Screen(val route: String, val name: String, val iconVector: ImageVector) {
@@ -22,6 +24,7 @@ sealed class Screen(val route: String, val name: String, val iconVector: ImageVe
     object Library : Screen("library", "Library", Icons.Default.List)
 }
 
+@ExperimentalAnimationApi
 @Composable
 fun SpodifyAppScreen(name: String, viewModel: MainViewModel){
     SpodifyappTheme {
@@ -31,7 +34,7 @@ fun SpodifyAppScreen(name: String, viewModel: MainViewModel){
             Screen.Library
         )
         // NavController
-        val navController = rememberNavController()
+        val navController = rememberAnimatedNavController()
         Scaffold(
             bottomBar = {
                 BottomNavigation {

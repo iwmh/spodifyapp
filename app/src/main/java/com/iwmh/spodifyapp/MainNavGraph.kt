@@ -1,20 +1,22 @@
 package com.iwmh.spodifyapp
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
 import com.iwmh.spodifyapp.view.home.HomeScreen
 import com.iwmh.spodifyapp.view.library.LibraryScreen
 import com.iwmh.spodifyapp.view.search.SearchScreen
 
+@ExperimentalAnimationApi
 @Composable
 fun MainNavGraph(
         navController: NavHostController,
         modifier: Modifier = Modifier
 ){
-    NavHost(
+    AnimatedNavHost(
             navController = navController,
             startDestination = Screen.Home.route,
             modifier = modifier
