@@ -12,15 +12,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.iwmh.spodifyapp.ui.theme.SpodifyappTheme
-import com.iwmh.spodifyapp.view.home.HomeScreen
-import com.iwmh.spodifyapp.view.library.LibraryScreen
-import com.iwmh.spodifyapp.view.search.SearchScreen
 
 sealed class Screen(val route: String, val name: String, val iconVector: ImageVector) {
     object Home : Screen("home", "Home", Icons.Default.Home)
@@ -70,7 +64,7 @@ fun SpodifyAppScreen(name: String, viewModel: MainViewModel){
                 modifier = Modifier.fillMaxSize(),
                 color = MaterialTheme.colors.background
             ) {
-                SpodifyNavHost(
+                MainNavGraph(
                     navController = navController,
                     Modifier.padding(innerPadding)
                 )
@@ -79,25 +73,3 @@ fun SpodifyAppScreen(name: String, viewModel: MainViewModel){
     }
 }
 
-@Composable
-fun SpodifyNavHost(
-    navController: NavHostController,
-    modifier: Modifier = Modifier
-){
-    NavHost(
-        navController = navController,
-        startDestination = Screen.Home.route,
-        modifier = modifier
-    ){
-        composable(Screen.Home.route){
-            HomeScreen(name = "Hiroshi")
-        }
-        composable(Screen.Search.route){
-            SearchScreen(name = "Hiroshi")
-        }
-        composable(Screen.Library.route){
-            LibraryScreen(name = "Hiroshi")
-        }
-    }
-
-}

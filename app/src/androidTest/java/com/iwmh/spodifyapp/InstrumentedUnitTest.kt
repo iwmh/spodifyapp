@@ -3328,7 +3328,7 @@ class InstrumentedUnitTest{
 
         mockWebServer.enqueue(successResponse)
 
-        val result = mainRepository.getUsersSavedShows()
+        val result = remoteDataSourceImpl.getUsersSavedShows(mockWebServer.url("").toString())
 
         assertEquals(15, result.items.count())
     }
