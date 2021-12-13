@@ -13,6 +13,8 @@ import androidx.compose.runtime.key
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable
 fun LibraryScreen(name: String) {
@@ -21,12 +23,21 @@ fun LibraryScreen(name: String) {
 
     val lazyPagingItems = viewModel.pagingFlow.collectAsLazyPagingItems()
 
-    Column {
-        Text(text = "Your library.")
-        Text(text = lazyPagingItems.itemCount.toString())
-        LazyColumn {
-            items(lazyPagingItems) { item ->
-                ShowCardSquare(show = item!!.show)
+    val isRefreshing by viewModel.isRefreshing.collectAsState()
+
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(isRefreshing),
+        onRefresh = {
+            lazyPagingItems.refresh()
+        }
+    ) {
+        Column {
+            Text(text = "Your library.")
+            Text(text = lazyPagingItems.itemCount.toString())
+            LazyColumn {
+                items(lazyPagingItems) { item ->
+                    ShowCardSquare(show = item!!.show)
+                }
             }
         }
     }

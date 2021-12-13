@@ -135,6 +135,9 @@ dependencies {
     implementation "androidx.paging:paging-runtime:3.0.1"
     implementation "androidx.paging:paging-compose:1.0.0-alpha14"
 
+    // Accompanist (Utils for Jetpack Compose)
+    implementation "com.google.accompanist:accompanist-swiperefresh:0.21.4-beta"
+
     // ↓ Testing ↓
     // Core library
     androidTestImplementation 'androidx.test:core:1.4.0'

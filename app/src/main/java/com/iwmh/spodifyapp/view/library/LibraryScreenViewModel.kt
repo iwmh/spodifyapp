@@ -5,12 +5,14 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
+import com.iwmh.spodifyapp.remote_data_source.RemoteDataSource
 import com.iwmh.spodifyapp.repository.MainPagingSource
 import com.iwmh.spodifyapp.repository.MainRepository
 import com.iwmh.spodifyapp.repository.model.ShowsFeed
 import com.iwmh.spodifyapp.repository.model.api.ItemShow
 import com.iwmh.spodifyapp.repository.model.api.PagingObject
 import com.iwmh.spodifyapp.repository.model.api.Show
+import com.iwmh.spodifyapp.util.InjectableConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.*
@@ -22,15 +24,21 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LibraryScreenViewModel @Inject constructor (
-    private val mainPagingSource: MainPagingSource
+    private val remoteDataSource: RemoteDataSource,
+    private val injectableConstants: InjectableConstants,
 ): ViewModel() {
 
 //    private val uiState = MutableStateFlow(LibraryViewUiState(isLoading = true))
 
+    // Refreshing flag for SwipeRefresh of Accompanist.
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean>
+        get() = _isRefreshing.asStateFlow()
+
     var pagingFlow = Pager(
         PagingConfig(pageSize = 20)
     ){
-        mainPagingSource
+        MainPagingSource(remoteDataSource, injectableConstants)
     }.flow.cachedIn(viewModelScope)
 
 //    val uiState = viewModelState
