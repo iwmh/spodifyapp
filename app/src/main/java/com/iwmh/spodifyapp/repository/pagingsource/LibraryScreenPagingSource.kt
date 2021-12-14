@@ -1,4 +1,4 @@
-package com.iwmh.spodifyapp.repository
+package com.iwmh.spodifyapp.repository.pagingsource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
@@ -8,8 +8,7 @@ import com.iwmh.spodifyapp.util.InjectableConstants
 import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
 
-@ViewModelScoped
-class MainPagingSource @Inject constructor(
+class LibraryScreenPagingSource constructor(
     private val remoteDataSource: RemoteDataSource,
     private val injectableConstants: InjectableConstants,
 ) : PagingSource<String, ItemShow>() {

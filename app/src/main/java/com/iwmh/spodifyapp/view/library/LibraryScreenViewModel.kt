@@ -6,20 +6,11 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.iwmh.spodifyapp.remote_data_source.RemoteDataSource
-import com.iwmh.spodifyapp.repository.MainPagingSource
-import com.iwmh.spodifyapp.repository.MainRepository
-import com.iwmh.spodifyapp.repository.model.ShowsFeed
+import com.iwmh.spodifyapp.repository.pagingsource.LibraryScreenPagingSource
 import com.iwmh.spodifyapp.repository.model.api.ItemShow
-import com.iwmh.spodifyapp.repository.model.api.PagingObject
-import com.iwmh.spodifyapp.repository.model.api.Show
 import com.iwmh.spodifyapp.util.InjectableConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.scopes.ViewModelScoped
-import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import net.openid.appauth.AuthorizationException
-import okhttp3.internal.wait
-import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,7 +29,7 @@ class LibraryScreenViewModel @Inject constructor (
     var pagingFlow = Pager(
         PagingConfig(pageSize = 20)
     ){
-        MainPagingSource(remoteDataSource, injectableConstants)
+        LibraryScreenPagingSource(remoteDataSource, injectableConstants)
     }.flow.cachedIn(viewModelScope)
 
 //    val uiState = viewModelState
