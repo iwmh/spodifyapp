@@ -7,6 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.iwmh.spodifyapp.util.Constants
 import com.iwmh.spodifyapp.view.episodes.EpisodesScreen
 import com.iwmh.spodifyapp.view.home.HomeScreen
 import com.iwmh.spodifyapp.view.library.LibraryScreen
@@ -32,14 +33,14 @@ fun MainNavGraph(
             LibraryScreen(navController)
         }
         composable(
-            route = "${Screen.Episodes.route}/{showId}",
+            route = "${Screen.Episodes.route}/{" + Constants.nav_showId + "}",
             arguments = listOf(
-                navArgument("showId"){
+                navArgument(Constants.nav_showId){
                     type = NavType.StringType
                 }
             )
         ){ navBackStackEntry ->
-            val showId = navBackStackEntry.arguments?.getString("showId")
+            val showId = navBackStackEntry.arguments?.getString(Constants.nav_showId)
             EpisodesScreen(showId)
         }
     }

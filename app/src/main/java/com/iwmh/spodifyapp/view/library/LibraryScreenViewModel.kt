@@ -9,6 +9,7 @@ import androidx.paging.cachedIn
 import com.iwmh.spodifyapp.remote_data_source.RemoteDataSource
 import com.iwmh.spodifyapp.repository.pagingsource.LibraryScreenPagingSource
 import com.iwmh.spodifyapp.repository.model.api.ItemShow
+import com.iwmh.spodifyapp.util.Constants
 import com.iwmh.spodifyapp.util.InjectableConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -47,7 +48,7 @@ class LibraryScreenViewModel @Inject constructor (
     }
 
     fun saveShowId(showId: String?){
-        savedStateHandle.set("showId", showId)
+        savedStateHandle.set(Constants.nav_showId, showId)
     }
 
     private fun refreshShows(){

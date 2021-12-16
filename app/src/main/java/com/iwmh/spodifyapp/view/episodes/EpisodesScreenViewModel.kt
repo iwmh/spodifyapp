@@ -8,6 +8,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.iwmh.spodifyapp.remote_data_source.RemoteDataSource
 import com.iwmh.spodifyapp.repository.pagingsource.EpisodesScreenPagingSource
+import com.iwmh.spodifyapp.util.Constants
 import com.iwmh.spodifyapp.util.InjectableConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -29,14 +30,14 @@ class EpisodesScreenViewModel @Inject constructor (
         PagingConfig(pageSize = 20)
     ){
         EpisodesScreenPagingSource(
-            savedStateHandle.get("showId"),
+            savedStateHandle.get(Constants.nav_showId),
             remoteDataSource,
             injectableConstants
         )
     }.flow.cachedIn(viewModelScope)
 
     init {
-        var a: String? = savedStateHandle.get("showId")
+        var a: String? = savedStateHandle.get(Constants.nav_showId)
         var b = ""
     }
 }
