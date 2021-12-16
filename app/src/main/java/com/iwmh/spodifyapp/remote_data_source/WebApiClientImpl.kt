@@ -2,6 +2,7 @@ package com.iwmh.spodifyapp.remote_data_source
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.iwmh.spodifyapp.repository.model.api.Episode
 import com.iwmh.spodifyapp.repository.model.api.ItemShow
 import com.iwmh.spodifyapp.repository.model.api.PagingObject
 import com.iwmh.spodifyapp.util.InjectableConstants
@@ -62,6 +63,35 @@ class WebApiClientImpl @Inject constructor(
             }
 
             val tokenType = object : TypeToken<PagingObject<ItemShow>>() {}.type
+            var respString = response.body?.string()
+
+            gson.fromJson(
+                respString,
+                tokenType
+            )
+        }
+    }
+
+    // Get Show Episodes
+    override suspend fun getShowEpisodes(showId: String?, initialUrl: String?): PagingObject<Episode> {
+
+        val url = initialUrl ?: injectableConstants.baseUrl + "/shows/" + showId + "/episodes"
+
+        // Make a request to API endpoint.
+        val request = Request.Builder()
+            .url(url)
+            .header("Content-Type", "application/json")
+            .header("Authorization", "Bearer ${authStateManager.authState.accessToken}")
+            .build()
+
+        return withContext(Dispatchers.IO) {
+
+            val response = okHttpClient.newCall(request).execute()
+            if (!response.isSuccessful) {
+                throw Exception(response.toString())
+            }
+
+            val tokenType = object : TypeToken<PagingObject<Episode>>() {}.type
             var respString = response.body?.string()
 
             gson.fromJson(

@@ -1,4 +1,4 @@
-package com.iwmh.spodifyapp.view.library
+package com.iwmh.spodifyapp.view.episodes
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
@@ -7,17 +7,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import com.iwmh.spodifyapp.Screen
 
 @Composable
-fun LibraryScreen(navController: NavController) {
-    val viewModel: LibraryScreenViewModel = hiltViewModel()
-//    val uiState by viewModel.uiState.collectAsState()
+fun EpisodesScreen(showId: String?) {
+    val viewModel: EpisodesScreenViewModel = hiltViewModel()
 
     val lazyPagingItems = viewModel.pagingFlow.collectAsLazyPagingItems()
 
@@ -30,18 +27,11 @@ fun LibraryScreen(navController: NavController) {
         }
     ) {
         Column {
-            Text(text = "Your library.")
+            Text(text = "Episodes")
             Text(text = lazyPagingItems.itemCount.toString())
             LazyColumn {
                 items(lazyPagingItems) { item ->
-                    ShowCardSquare(
-                        show = item?.show,
-                    ){  // onClick
-                        // Save "showId" for EpisodesScreen to use.
-                        viewModel.saveShowId(item?.show?.id)
-                        // Navigate to EpisodesScreen.
-                        navController.navigate("${Screen.Episodes.route}/${item?.show?.id}")
-                    }
+                    EpisodeCardSquare(showId = item!!.name)
                 }
             }
         }

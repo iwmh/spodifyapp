@@ -1,5 +1,6 @@
 package com.iwmh.spodifyapp.remote_data_source
 
+import com.iwmh.spodifyapp.repository.model.api.Episode
 import com.iwmh.spodifyapp.repository.model.api.ItemShow
 import com.iwmh.spodifyapp.repository.model.api.PagingObject
 
@@ -17,4 +18,6 @@ interface RemoteDataSource {
     // Get User's saved shows
     suspend fun getUsersSavedShows(url: String?): PagingObject<ItemShow>
 
+    // Get Show Episodes
+    suspend fun getShowEpisodes(showId: String?,  url: String?): PagingObject<Episode>
 }

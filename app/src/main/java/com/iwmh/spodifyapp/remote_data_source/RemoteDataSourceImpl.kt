@@ -1,5 +1,6 @@
 package com.iwmh.spodifyapp.remote_data_source
 
+import com.iwmh.spodifyapp.repository.model.api.Episode
 import com.iwmh.spodifyapp.repository.model.api.ItemShow
 import com.iwmh.spodifyapp.repository.model.api.PagingObject
 import javax.inject.Inject
@@ -26,5 +27,11 @@ class RemoteDataSourceImpl @Inject constructor(
     override suspend fun getUsersSavedShows(url: String?): PagingObject<ItemShow> {
         return apiClient.getUsersSavedShows(url)
     }
+
+    // Get Show Episodes
+    override suspend fun getShowEpisodes(showId: String?, url: String?): PagingObject<Episode> {
+        return apiClient.getShowEpisodes(showId, url)
+    }
+
 
 }

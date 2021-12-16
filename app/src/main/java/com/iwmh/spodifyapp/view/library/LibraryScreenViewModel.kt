@@ -1,5 +1,6 @@
 package com.iwmh.spodifyapp.view.library
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
@@ -15,6 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LibraryScreenViewModel @Inject constructor (
+    private var savedStateHandle: SavedStateHandle,
     private val remoteDataSource: RemoteDataSource,
     private val injectableConstants: InjectableConstants,
 ): ViewModel() {
@@ -42,6 +44,10 @@ class LibraryScreenViewModel @Inject constructor (
 
     init {
         refreshShows()
+    }
+
+    fun saveShowId(showId: String?){
+        savedStateHandle.set("showId", showId)
     }
 
     private fun refreshShows(){

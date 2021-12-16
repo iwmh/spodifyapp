@@ -17,10 +17,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.iwmh.spodifyapp.ui.theme.SpodifyappTheme
 
-sealed class Screen(val route: String, val name: String, val iconVector: ImageVector) {
+sealed class Screen(val route: String, val name: String, val iconVector: ImageVector?) {
     object Home : Screen("home", "Home", Icons.Default.Home)
     object Search : Screen("search", "Search", Icons.Default.Search)
     object Library : Screen("library", "Library", Icons.Default.List)
+    object Episodes: Screen("episodes", "Episodes", null)
 }
 
 @Composable
@@ -40,7 +41,7 @@ fun SpodifyAppScreen(name: String, viewModel: MainViewModel){
                     val currentDestination = navBackStackEntry?.destination
                     items.forEach{ screen ->
                         BottomNavigationItem(
-                            icon = {Icon(screen.iconVector, contentDescription = null)},
+                            icon = {Icon(screen.iconVector!!, contentDescription = null)},
                             label = {Text(screen.name)},
                             selected = currentDestination?.hierarchy?.any{it.route == screen.route} == true,
                             onClick = {
