@@ -167,17 +167,13 @@ class InstrumentedMediumTest{
         )
         button.click()
 
-        // auth button exists again
-        device.wait(
-            Until.findObject(
-                By.text("auth")
-            ), WAIT_TIMEOUT
+        var homeText = device.findObject(
+            UiSelector().textContains("podcast information")
         )
-        var authAgain = device.findObject(
-            UiSelector().text("Home")
-        )
-        assert(authAgain.exists())
+        assert(homeText.exists())
     }
+
+
 
 
 
