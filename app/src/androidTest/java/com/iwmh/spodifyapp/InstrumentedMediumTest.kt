@@ -173,6 +173,21 @@ class InstrumentedMediumTest{
         assert(homeText.exists())
     }
 
+    @Test
+    fun click_library_tab(){
+        // Click the "Library" tab.
+        var libraryTab = device.findObject(
+            UiSelector().text("Library")
+        )
+        libraryTab.click()
+
+        // Navigate to the Library tab content.
+        var libraryContentText = device.findObject(
+            UiSelector().text("Your library.")
+        )
+        assert(libraryContentText.exists())
+
+    }
 
 
 
