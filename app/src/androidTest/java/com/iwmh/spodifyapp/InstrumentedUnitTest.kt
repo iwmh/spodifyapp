@@ -54,7 +54,6 @@ class InstrumentedUnitTest{
                 .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
                 .build()
 
-            // Backup the initial AuthState value.
             val prefs = EncryptedSharedPreferences.create(
                 context,
                 Constants.shared_prefs_file,

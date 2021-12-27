@@ -77,6 +77,15 @@ class InstrumentedMediumTest{
         @JvmStatic
         fun end() {
 
+            // In this instrumented test suites, I first clear the SharedPreference's contents,
+            // in order to execute the auth flow.
+            // After that, fresh token is stored in SharedPreferences.
+
+            // If you want to run or debug the app, that token is going to be used,
+            // without doing the auth flow all over again.
+            // (It's just recycling the token from the instrumented test ...)
+
+            /*
             // Restore the initial AuthState value.
             val context = InstrumentationRegistry.getInstrumentation().targetContext
             val prefs = EncryptedSharedPreferences.create(
@@ -89,6 +98,7 @@ class InstrumentedMediumTest{
             prefs.edit()
                 .putString(Constants.auth_state_json, initialAuthState.jsonSerializeString())
                 .apply()
+             */
 
         }
     }
