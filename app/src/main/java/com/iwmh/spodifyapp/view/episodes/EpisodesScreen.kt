@@ -13,8 +13,11 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable
-fun EpisodesScreen() {
+fun EpisodesScreen(showId: String?) {
     val viewModel: EpisodesScreenViewModel = hiltViewModel()
+    // Hold the Show ID for this screen.
+    // TODO: Needs better code here.
+    viewModel.showId = showId
 
     val lazyPagingItems = viewModel.pagingFlow.collectAsLazyPagingItems()
 

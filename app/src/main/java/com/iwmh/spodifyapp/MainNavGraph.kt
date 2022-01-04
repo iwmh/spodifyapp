@@ -39,12 +39,9 @@ fun MainNavGraph(
                     type = NavType.StringType
                 }
             )
-        ){
-        /* When you pass parameter to composable in navigating.
         ){ navBackStackEntry ->
             val showId = navBackStackEntry.arguments?.getString(Constants.nav_showId)
-        */
-            EpisodesScreen()
+            EpisodesScreen(showId)
         }
     }
 

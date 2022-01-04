@@ -26,11 +26,16 @@ class EpisodesScreenViewModel @Inject constructor (
     val isRefreshing: StateFlow<Boolean>
         get() = _isRefreshing.asStateFlow()
 
+    // ShowID for this page.
+    // TODO: Needs better code here.
+    var showId: String? = ""
+
     var pagingFlow = Pager(
         PagingConfig(pageSize = 20)
     ){
         EpisodesScreenPagingSource(
-            savedStateHandle.get(Constants.nav_showId),
+//            savedStateHandle.get(Constants.nav_showId),
+            showId,
             remoteDataSource,
             injectableConstants
         )
