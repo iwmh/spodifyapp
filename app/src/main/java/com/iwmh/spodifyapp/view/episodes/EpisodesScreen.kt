@@ -33,13 +33,13 @@ fun EpisodesScreen(showId: String?) {
             Text(text = "Episodes")
             Text(text = lazyPagingItems.itemCount.toString())
             LazyColumn {
-                items(lazyPagingItems) { item ->
+                items(lazyPagingItems) { episodeItem ->
                     EpisodeCardSquare(
-                        showName = item!!.name,
-                        imageUrl = item!!.images[2].url,
-                        description = item!!.description,
-                        duration = item!!.duration_ms,
-                        releaseDate = item!!.release_date,
+                        episodeName = episodeItem!!.name,
+                        imageUrl = episodeItem!!.images[2].url,
+                        description = episodeItem!!.description,
+                        duration = episodeItem!!.duration_ms,
+                        releaseDate = episodeItem!!.release_date,
                     )
                 }
             }

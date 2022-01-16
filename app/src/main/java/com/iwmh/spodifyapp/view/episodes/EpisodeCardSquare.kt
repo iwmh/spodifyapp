@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit
 
 @Composable
 fun EpisodeCardSquare(
-        showName: String?,
+        episodeName: String?,
         imageUrl: String?,
         description: String,
         duration: Int,
@@ -31,7 +31,7 @@ fun EpisodeCardSquare(
                 modifier = Modifier.size(40.dp)
             )
             Text(
-                text = "$showName.",
+                text = "$episodeName.",
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
