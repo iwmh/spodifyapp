@@ -22,6 +22,7 @@ sealed class Screen(val route: String, val name: String, val iconVector: ImageVe
     object Search : Screen("search", "Search", Icons.Default.Search)
     object Library : Screen("library", "Library", Icons.Default.List)
     object Episodes: Screen("episodes", "Episodes", null)
+    object EpisodeDetail: Screen("episodeDetail", "EpisodeDetail", null)
 }
 
 @Composable

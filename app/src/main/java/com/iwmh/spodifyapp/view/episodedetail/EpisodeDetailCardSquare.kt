@@ -1,4 +1,4 @@
-package com.iwmh.spodifyapp.view.episodes
+package com.iwmh.spodifyapp.view.episodedetail
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -9,44 +9,34 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
+import java.net.URLEncoder
 import java.util.concurrent.TimeUnit
 
 @Composable
-fun EpisodeCardSquare(
+fun EpisodeDetailCardSquare(
         episodeName: String?,
         imageUrl: String?,
         description: String,
         duration: Int,
         releaseDate: String,
-        onClick: () -> Unit
 ){
     Column(
-        modifier =  Modifier.padding(top = 10.dp).clickable ( onClick = onClick )
     ) {
         Row {
             Image(
                 painter = rememberImagePainter(imageUrl),
                 contentDescription = null,
-                modifier = Modifier.size(40.dp)
+                modifier = Modifier.size(32.dp)
             )
-            Text(
-                text = "$episodeName.",
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+            Text(text = "$episodeName.")
         }
         Row {
-            Text(
-                text = description,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+            Text(text = description)
         }
         Row {
-            Text("$releaseDate, ${TimeUnit.MILLISECONDS.toMinutes(duration.toLong())} min.")
+            Text("$releaseDate・${TimeUnit.MILLISECONDS.toMinutes(duration.toLong())}" + "min.")
         }
     }
 }
